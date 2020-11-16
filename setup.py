@@ -7,13 +7,13 @@ from setuptools import setup
 #     readme = f.read()
 
 setup(
-    name="flask-sdk",
+    name="course",
     version="1.0.0",
     url="https://techtapir.com",
     license="BSD",
     maintainer="Dallan Bhatti",
     maintainer_email="dallan.bhatti@techtapir.com",
-    description="FLASK SDK",
+    description="COURSE Microservice",
     # long_description=readme,
     packages=find_packages(),
     include_package_data=True,

@@ -1,13 +1,11 @@
 import logging
-from ..common import Cache, DB, Event
+from ..common import DB
 from ..common.error import ManualException
 
 
 class Base:
     def __init__(self):
         self.db = DB()
-        self.cache = Cache()
-        self.event = Event()
         self.logger = logging.getLogger(__name__)
 
     # @cache.memoize(timeout=1000)
@@ -42,9 +40,6 @@ class Base:
         for k, v in attr.items():
             instance.__setattr__(k, v)
         return instance
-
-    def notify(self, topic, value, key):
-        self.event.send(topic=topic, value=value, key=key)
 
     @staticmethod
     def error(code, **kwargs):

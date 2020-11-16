@@ -1,6 +1,6 @@
 import os
 from flask.cli import FlaskGroup
-from src import app, db, cache
+from src import app, db
 
 cli = FlaskGroup(app)
 
@@ -22,9 +22,6 @@ def clear_db():
     db.session.commit()
 
 
-def clear_cache():
-    cache.clear()
-
 
 @cli.command("init")
 def init():
@@ -39,11 +36,6 @@ def reset_db():
 @cli.command("delete_db")
 def delete_db():
     clear_db()
-
-
-@cli.command("flush_cache")
-def flush_cache():
-    clear_cache()
 
 
 if __name__ == "__main__":
