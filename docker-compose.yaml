@@ -22,6 +22,8 @@ services:
       - ./src:/home/app/src
       - ./manage.py:/home/app/manage.py
       - ./setup.py:/home/app/setup.py
+    ports:
+      - 20008:5000
     env_file:
       - ${HUNCHO_DIR}/env/dev/.env.course
     healthcheck:

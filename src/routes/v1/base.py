@@ -1,9 +1,9 @@
 import logging
-
-from flask import g
-from flask_restful import Resource
 from http import HTTPStatus
+
+from flask_restful import Resource
 from marshmallow import ValidationError
+
 from ...common.error import ManualException
 from ...services import Base as Service
 
