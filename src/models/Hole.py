@@ -5,7 +5,7 @@ from .. import db
 
 
 class Hole(db.Model, BaseMixin):
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=True)
     number = db.Column(db.Integer, nullable=False)
     par = db.Column(db.Integer, nullable=False)
     distance = db.Column(db.Integer, nullable=False)
@@ -15,3 +15,9 @@ class Hole(db.Model, BaseMixin):
 
     # Relationship
     course = db.relationship("Course", back_populates="holes")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+Hole.register()

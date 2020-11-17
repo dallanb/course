@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import marshal_with
+
 from .schema import *
 from ..base import Base
 from ....common.response import DataResponse
@@ -45,6 +46,25 @@ class CoursesListAPI(Base):
                 'courses': self.dump(
                     schema=dump_many_schema,
                     instance=courses.items
+                )
+            }
+        )
+
+    @marshal_with(DataResponse.marshallable())
+    def post(self):
+        data = self.clean(schema=create_schema, instance=request.get_json())
+        course = self.course.create(status='pending', **data)
+
+        # participants = data.pop('participants')
+        # if participants:
+        #     for user_uuid in participants:
+        #         status = 'active' if g.user == user_uuid else 'pending'
+        #         self.participant.create(user_uuid=user_uuid, status=status, contest=contest)
+        return DataResponse(
+            data={
+                'courses': self.dump(
+                    schema=dump_schema,
+                    instance=course
                 )
             }
         )
