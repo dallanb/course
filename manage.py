@@ -7,8 +7,15 @@ from src import app, db
 cli = FlaskGroup(app)
 
 
-def full_init():
+def full_load():
     os.system('flask seed run')
+
+
+def init_db():
+    db.drop_all()
+    db.configure_mappers()
+    db.create_all()
+    db.session.commit()
 
 
 def drop_db():
@@ -41,7 +48,12 @@ def clear_db():
 
 @cli.command("init")
 def init():
-    full_init()
+    init_db()
+
+
+@cli.command("load")
+def load():
+    full_load()
 
 
 @cli.command("create")
