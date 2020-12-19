@@ -1,5 +1,7 @@
 import os
+
 from flask.cli import FlaskGroup
+
 from src import app, db
 
 cli = FlaskGroup(app)
@@ -9,7 +11,22 @@ def full_init():
     os.system('flask seed run')
 
 
+def drop_db():
+    db.drop_all()
+    db.session.commit()
+
+
+def configure_db():
+    db.configure_mappers()
+    db.session.commit()
+
+
 def create_db():
+    db.create_all()
+    db.session.commit()
+
+
+def reset_db():
     db.drop_all()
     db.create_all()
     db.session.commit()
@@ -22,15 +39,29 @@ def clear_db():
     db.session.commit()
 
 
-
 @cli.command("init")
 def init():
     full_init()
 
 
-@cli.command("reset_db")
-def reset_db():
+@cli.command("create")
+def create():
     create_db()
+
+
+@cli.command("drop")
+def drop():
+    drop_db()
+
+
+@cli.command("reset")
+def reset():
+    reset_db()
+
+
+@cli.command("configure")
+def configure():
+    configure_db()
 
 
 @cli.command("delete_db")
