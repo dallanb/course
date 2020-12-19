@@ -40,7 +40,7 @@ class DumpCourseSchema(Schema):
 class FetchAllCourseSchema(Schema):
     page = fields.Int(required=False, missing=1)
     per_page = fields.Int(required=False, missing=10)
-    name = fields.String(required=False)
+    search = fields.String(required=False, missing=None)
 
 
 class UpdateCourseSchema(Schema):
@@ -52,16 +52,8 @@ class UpdateCourseSchema(Schema):
     country = fields.Str(required=False, missing=None)
 
 
-class SearchCourseSchema(Schema):
-    page = fields.Int(required=False, missing=1)
-    per_page = fields.Int(required=False, missing=10)
-    key = fields.String(attribute='search.key', data_key='key')
-    fields = fields.DelimitedList(fields.String(), attribute='search.fields', data_key='fields')
-
-
 create_schema = CreateCourseSchema()
 dump_schema = DumpCourseSchema()
 dump_many_schema = DumpCourseSchema(many=True)
 fetch_all_schema = FetchAllCourseSchema()
 update_schema = UpdateCourseSchema()
-search_schema = SearchCourseSchema()

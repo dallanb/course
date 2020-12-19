@@ -4,6 +4,7 @@ from flask_marshmallow import Marshmallow
 from flask_restful import Api, marshal_with
 from flask_seeder import FlaskSeeder
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_searchable import make_searchable
 
 app = Flask(__name__)
 app.config.from_object("src.config.Config")
@@ -11,6 +12,7 @@ app.config.from_object("src.config.Config")
 CORS(app, supports_credentials=True)
 # db
 db = SQLAlchemy(app)
+make_searchable(db.metadata)
 # ma
 ma = Marshmallow()
 # routes
