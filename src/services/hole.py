@@ -12,11 +12,11 @@ class Hole(Base):
         self.hole_model = HoleModel
 
     def find(self, **kwargs):
-        return Base.find(self, model=self.hole_model, **kwargs)
+        return self._find(model=self.hole_model, **kwargs)
 
     def create(self, **kwargs):
-        hole = self.init(model=self.hole_model, **kwargs)
-        return self.save(instance=hole)
+        hole = self._init(model=self.hole_model, **kwargs)
+        return self._save(instance=hole)
 
     def update(self, uuid, **kwargs):
         holes = self.find(uuid=uuid)
@@ -25,5 +25,5 @@ class Hole(Base):
         return self.apply(instance=holes.items[0], **kwargs)
 
     def apply(self, instance, **kwargs):
-        hole = self.assign_attr(instance=instance, attr=kwargs)
-        return self.save(instance=hole)
+        hole = self._assign_attr(instance=instance, attr=kwargs)
+        return self._save(instance=hole)

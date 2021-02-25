@@ -4,13 +4,13 @@ from flask_restful import marshal_with
 from .schema import *
 from ..base import Base
 from ....common.response import DataResponse
-from ....services import Course
+from ....services import CourseService
 
 
 class CoursesAPI(Base):
     def __init__(self):
         Base.__init__(self)
-        self.course = Course()
+        self.course = CourseService()
 
     @marshal_with(DataResponse.marshallable())
     def get(self, uuid):
@@ -30,7 +30,7 @@ class CoursesAPI(Base):
 class CoursesListAPI(Base):
     def __init__(self):
         Base.__init__(self)
-        self.course = Course()
+        self.course = CourseService()
 
     @marshal_with(DataResponse.marshallable())
     def get(self):

@@ -12,11 +12,11 @@ class Course(Base):
         self.course_model = CourseModel
 
     def find(self, **kwargs):
-        return Base.find(self, model=self.course_model, **kwargs)
+        return self._find(model=self.course_model, **kwargs)
 
     def create(self, **kwargs):
-        course = self.init(model=self.course_model, **kwargs)
-        return self.save(instance=course)
+        course = self._init(model=self.course_model, **kwargs)
+        return self._save(instance=course)
 
     def update(self, uuid, **kwargs):
         courses = self.find(uuid=uuid)
@@ -26,5 +26,5 @@ class Course(Base):
 
     def apply(self, instance, **kwargs):
         # if course status is being updated we will trigger a notification
-        course = self.assign_attr(instance=instance, attr=kwargs)
-        return self.save(instance=course)
+        course = self._assign_attr(instance=instance, attr=kwargs)
+        return self._save(instance=course)

@@ -46,6 +46,7 @@ def clear_db():
     db.session.commit()
 
 
+
 @cli.command("init")
 def init():
     init_db()
