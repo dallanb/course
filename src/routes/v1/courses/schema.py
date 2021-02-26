@@ -40,7 +40,7 @@ class DumpCourseSchema(Schema):
 class FetchAllCourseSchema(Schema):
     page = fields.Int(required=False, missing=1)
     per_page = fields.Int(required=False, missing=10)
-    search = fields.String(required=False, missing=None)
+    search = fields.String(required=False)
 
 
 class UpdateCourseSchema(Schema):

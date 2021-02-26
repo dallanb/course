@@ -25,7 +25,7 @@ services:
     ports:
       - 20008:5000
     env_file:
-      - ${HUNCHO_DIR}/env/dev/.env.course
+      - env/.env.course
     healthcheck:
       test: curl --fail -s course:5000/ping || exit 1
       interval: 60s
@@ -39,16 +39,18 @@ services:
     container_name: course_db
     image: postgres:9.6
     volumes:
-      - ${HUNCHO_DIR}/data/dev/course_db/data:/var/lib/postgresql/data/
+      - db_data:/var/lib/postgresql/data/
     env_file:
-      - ${HUNCHO_DIR}/env/dev/.env.course_db
+      - env/.env.course_db
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U course" ]
+      test: ["CMD-SHELL", "pg_isready -U course"]
       interval: 10s
       timeout: 5s
       retries: 20
     networks:
       - app-net
+volumes:
+  db_data:
 networks:
   app-net:
     driver: bridge

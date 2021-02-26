@@ -1,3 +1,3 @@
 from .base import Base
-from .course import Course
-from .hole import Hole
+from .course import Course as CourseService
+from .hole import Hole as HoleService
