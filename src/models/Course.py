@@ -1,4 +1,4 @@
-from sqlalchemy_utils import CountryType
+from sqlalchemy_utils import CountryType, UUIDType
 from sqlalchemy_utils.types import TSVectorType
 
 from .mixins import BaseMixin
@@ -7,6 +7,7 @@ from ..common import StatusEnum
 
 
 class Course(db.Model, BaseMixin):
+    created_by = db.Column(UUIDType(binary=False), nullable=False)
     name = db.Column(db.String, nullable=False)
     status = db.Column(db.Enum(StatusEnum), nullable=False)
     line_1 = db.Column(db.String, nullable=True)
