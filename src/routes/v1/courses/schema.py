@@ -12,6 +12,7 @@ class CreateCourseSchema(Schema):
     city = fields.Str(required=False, missing=None)
     province = fields.Str(required=False, missing=None)
     country = fields.Str(required=False, missing=None)
+    holes = fields.List(fields.Nested('CreateHoleSchema'), required=False)
 
 
 class DumpCourseSchema(Schema):

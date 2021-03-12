@@ -15,6 +15,47 @@ from tests.helpers import generate_uuid
 ###########
 # Create
 ###########
+def test_create_course_w_holes(reset_db):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the POST endpoint 'courses' is requested
+    THEN check that the response is valid
+    """
+    # Header
+    headers = {'X-Consumer-Custom-ID': pytest.user_uuid}
+
+    # Payload
+    payload = {
+        'name': pytest.course_name,
+        'line_1': pytest.line_1,
+        'line_2': pytest.line_2,
+        'city': pytest.city,
+        'province': pytest.province,
+        'country': pytest.country,
+        'holes': [{'number': 1, 'par': 3, 'distance': 275}]
+    }
+
+    # Request
+    response = app.test_client().post('/courses', headers=headers, json=payload)
+
+    # Response
+    assert response.status_code == 200
+    response = json.loads(response.data)
+    assert response['msg'] == 'OK'
+    courses = response['data']['courses']
+    assert courses['status'] == 'pending'
+    assert courses['uuid'] is not None
+    assert courses['name'] == pytest.course_name
+    assert courses['line_1'] == pytest.line_1
+    assert courses['line_2'] == pytest.line_2
+    assert courses['city'] == pytest.city
+    assert courses['province'] == pytest.province
+    assert courses['country'] == pytest.country
+
+    holes = services.HoleService().find()
+    assert holes.total == 1
+
+
 def test_create_course(reset_db):
     """
     GIVEN a Flask application configured for testing

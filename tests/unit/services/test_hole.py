@@ -187,6 +187,130 @@ def test_hole_create_w_bad_field():
 
 
 ###########
+# Add
+###########
+def test_hole_add(reset_db, seed_course):
+    """
+    GIVEN 0 hole instance in the database
+    WHEN the add method is called
+    THEN it should return 1 hole and add 0 hole instance into the database
+    """
+
+    hole = hole_service.add(course=pytest.course, name=pytest.hole_name, number=pytest.hole_number, par=pytest.par,
+                            distance=pytest.distance)
+    assert hole.uuid is not None
+    assert hole.course == pytest.course
+
+    holes = hole_service.find(uuid=hole.uuid)
+    assert holes.total == 1
+    assert len(holes.items) == 1
+
+
+def test_hole_add_dup_course(reset_db, seed_course, seed_hole):
+    """
+    GIVEN 1 hole instance in the database
+    WHEN the add method is called with duplicate course
+    THEN it should return 1 hole and add 0 hole instance into the database
+    """
+
+    hole = hole_service.add(course=pytest.course, name=pytest.hole_name, number=2, par=pytest.par,
+                            distance=pytest.distance)
+    assert hole.course == pytest.course
+    hole_service._rollback()
+
+
+def test_hole_add_wo_course(reset_db):
+    """
+    GIVEN 1 hole instance in the database
+    WHEN the add method is called without course
+    THEN it should return 1 hole and add 0 hole instance into the database
+    """
+
+    hole = hole_service.add(name=pytest.hole_name, number=pytest.hole_number, par=pytest.par, distance=pytest.distance)
+    assert hole.uuid is not None
+    assert hole.course is None
+    assert hole.course_uuid is None
+    hole_service._rollback()
+
+
+def test_hole_add_w_non_existent_course_uuid(reset_db):
+    """
+    GIVEN 1 hole instance in the database
+    WHEN the add method is called with non existent course uuid
+    THEN it should return 1 hole and add 0 hole instance into the database
+    """
+    course_uuid = generate_uuid()
+    hole = hole_service.add(course_uuid=course_uuid, name=pytest.hole_name, number=pytest.hole_number, par=pytest.par,
+                            distance=pytest.distance)
+    assert hole.course_uuid == course_uuid
+    hole_service._rollback()
+
+
+def test_hole_add_w_bad_field(reset_db, seed_course):
+    """
+    GIVEN 0 hole instance in the database
+    WHEN the add method is called with a non existent field
+    THEN it should return 0 hole and add 0 hole instance into the database and ManualException with code 500
+    """
+
+    try:
+        _ = hole_service.add(course=pytest.course, name=pytest.hole_name, number=pytest.hole_number, par=pytest.par,
+                             distance=pytest.distance,
+                             junk='junk')
+    except ManualException as ex:
+        assert ex.code == 500
+
+
+###########
+# Commit
+###########
+def test_hole_commit(reset_db, seed_course):
+    """
+    GIVEN 0 hole instance in the database
+    WHEN the commit method is called
+    THEN it should return 0 hole and add 1 hole instance into the database
+    """
+
+    _ = hole_service.add(course=pytest.course, name=pytest.hole_name, number=pytest.hole_number, par=pytest.par,
+                         distance=pytest.distance)
+    _ = hole_service.commit()
+
+    holes = hole_service.find()
+    assert holes.total == 1
+    assert len(holes.items) == 1
+
+
+def test_hole_commit_dup_member_uuid_dup_course():
+    """
+    GIVEN 1 hole instance in the database
+    WHEN the commit method is called with duplicate course
+    THEN it should return 0 hole and add 1 hole instance into the database
+    """
+
+    _ = hole_service.add(course=pytest.course, name=pytest.hole_name, number=pytest.hole_number, par=pytest.par,
+                         distance=pytest.distance)
+    try:
+        _ = hole_service.commit()
+    except ManualException as ex:
+        assert ex.code == 500
+
+
+def test_hole_commit_wo_course():
+    """
+    GIVEN 1 hole instance in the database
+    WHEN the commit method is called without course
+    THEN it should return 0 hole and add 0 hole instance into the database and ManualException with code 500
+    """
+
+    _ = hole_service.add(name=pytest.hole_name, number=pytest.hole_number, par=pytest.par, distance=pytest.distance)
+
+    try:
+        _ = hole_service.commit()
+    except ManualException as ex:
+        assert ex.code == 500
+
+
+###########
 # Update
 ###########
 def test_hole_update(reset_db, seed_course, seed_hole):

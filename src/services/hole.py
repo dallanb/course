@@ -18,6 +18,13 @@ class Hole(Base):
         hole = self._init(model=self.hole_model, **kwargs)
         return self._save(instance=hole)
 
+    def add(self, **kwargs):
+        hole = self._init(model=self.hole_model, **kwargs)
+        return self._add(instance=hole)
+
+    def commit(self):
+        return self._commit()
+
     def update(self, uuid, **kwargs):
         holes = self.find(uuid=uuid)
         if not holes.total:

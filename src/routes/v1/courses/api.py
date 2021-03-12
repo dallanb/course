@@ -4,7 +4,7 @@ from flask_restful import marshal_with
 from .schema import *
 from ..base import Base
 from ....common.response import DataResponse
-from ....services import CourseService
+from ....services import CourseService, HoleService
 
 
 class CoursesAPI(Base):
@@ -31,6 +31,7 @@ class CoursesListAPI(Base):
     def __init__(self):
         Base.__init__(self)
         self.course = CourseService()
+        self.hole = HoleService()
 
     @marshal_with(DataResponse.marshallable())
     def get(self):
@@ -53,13 +54,13 @@ class CoursesListAPI(Base):
     @marshal_with(DataResponse.marshallable())
     def post(self):
         data = self.clean(schema=create_schema, instance=request.get_json())
+        holes = data.pop('holes', None)
         course = self.course.create(status='pending', **data)
 
-        # participants = data.pop('participants')
-        # if participants:
-        #     for user_uuid in participants:
-        #         status = 'active' if g.user == user_uuid else 'pending'
-        #         self.participant.create(user_uuid=user_uuid, status=status, contest=contest)
+        if holes is not None:
+            for hole in holes:
+                self.hole.add(course=course, **hole)
+            self.hole.commit()
         return DataResponse(
             data={
                 'courses': self.dump(
