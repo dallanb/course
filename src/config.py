@@ -9,6 +9,7 @@ class Config(object):
     TESTING = os.getenv("TESTING", False)
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite://")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    KAFKA_URL = os.getenv("KAFKA_URL")
     LOGGING_CONFIG = {
         'version': 1,
         'loggers': {

@@ -1,0 +1,1 @@
+from .course_notification import course_notification

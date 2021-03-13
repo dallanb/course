@@ -2,6 +2,7 @@ import logging
 from http import HTTPStatus
 
 from .base import Base
+from ..decorators import course_notification
 from ..models import Course as CourseModel
 
 
@@ -14,6 +15,7 @@ class Course(Base):
     def find(self, **kwargs):
         return self._find(model=self.course_model, **kwargs)
 
+    @course_notification(operation='create')
     def create(self, **kwargs):
         course = self._init(model=self.course_model, **kwargs)
         return self._save(instance=course)
@@ -24,6 +26,7 @@ class Course(Base):
             self.error(code=HTTPStatus.NOT_FOUND)
         return self.apply(instance=courses.items[0], **kwargs)
 
+    @course_notification(operation='update')
     def apply(self, instance, **kwargs):
         # if course status is being updated we will trigger a notification
         course = self._assign_attr(instance=instance, attr=kwargs)
