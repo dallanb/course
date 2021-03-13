@@ -15,7 +15,7 @@ def test_init(reset_db):
     WHEN calling the init method of the db instance on the Course model
     THEN it should return the course instance
     """
-    instance = db.init(model=Course, name=pytest.course_name, status='pending')
+    instance = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     assert cleaner.is_mapped(instance) == instance
     assert cleaner.is_uuid(instance.uuid) is not None
     assert instance.name == pytest.course_name
@@ -32,7 +32,7 @@ def test_count():
     count = db.count(model=Course)
     assert count == 0
 
-    course = db.init(model=Course, name=pytest.course_name, status='pending')
+    course = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     _ = db.save(instance=course)
     count = db.count(model=Course)
     assert count == 1
@@ -44,7 +44,7 @@ def test_add(reset_db):
     WHEN calling the add method of the db instance on a course instance
     THEN it should add a course instance to the database
     """
-    instance = db.init(model=Course, name=pytest.course_name, status='pending')
+    instance = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     course = db.add(instance=instance)
     assert cleaner.is_uuid(course.uuid) is not None
     assert course.name == pytest.course_name
@@ -59,7 +59,7 @@ def test_commit(reset_db):
     WHEN calling the commit method of the db instance on a course instance
     THEN it should add a course instance to the database
     """
-    instance = db.init(model=Course, name=pytest.course_name, status='pending')
+    instance = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     course = db.add(instance=instance)
     assert cleaner.is_uuid(course.uuid) is not None
     assert course.name == pytest.course_name
@@ -71,9 +71,9 @@ def test_commit(reset_db):
     db.commit()
     assert db.count(model=Course) == 1
 
-    instance_0 = db.init(model=Course, name=pytest.course_name, status='pending')
-    instance_1 = db.init(model=Course, name=pytest.course_name, status='pending')
-    instance_2 = db.init(model=Course, name=pytest.course_name, status='pending')
+    instance_0 = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
+    instance_1 = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
+    instance_2 = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     db.add(instance=instance_0)
     db.add(instance=instance_1)
     db.add(instance=instance_2)
@@ -87,7 +87,7 @@ def test_save(reset_db):
     WHEN calling the save method of the db instance on a course instance
     THEN it should add a course instance to the database
     """
-    instance = db.init(model=Course, name=pytest.course_name, status='pending')
+    instance = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     assert cleaner.is_uuid(instance.uuid) is not None
     assert instance.name == pytest.course_name
     course = db.save(instance=instance)
@@ -130,12 +130,12 @@ def test_rollback(reset_db):
     WHEN calling the rollback method of the db instance
     THEN it should rollback a course instance from being inserted the database
     """
-    instance = db.init(model=Course, name=pytest.course_name, status='pending')
+    instance = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     db.rollback()
     db.commit()
     assert db.count(model=Course) == 0
 
-    instance = db.init(model=Course, name=pytest.course_name, status='pending')
+    instance = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
     db.save(instance=instance)
     db.rollback()
     assert db.count(model=Course) == 1

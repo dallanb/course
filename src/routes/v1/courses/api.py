@@ -1,8 +1,9 @@
-from flask import request
+from flask import request, g
 from flask_restful import marshal_with
 
 from .schema import *
 from ..base import Base
+from ....common import check_user
 from ....common.response import DataResponse
 from ....services import CourseService, HoleService
 
@@ -52,10 +53,11 @@ class CoursesListAPI(Base):
         )
 
     @marshal_with(DataResponse.marshallable())
+    @check_user
     def post(self):
         data = self.clean(schema=create_schema, instance=request.get_json())
         holes = data.pop('holes', None)
-        course = self.course.create(status='pending', **data)
+        course = self.course.create(status='pending', **data, created_by=g.user)
 
         if holes is not None:
             for hole in holes:

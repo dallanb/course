@@ -14,7 +14,7 @@ def test_cleaner_is_mapped_pass():
     WHEN calling the is_mapped method of the cleaner instance on the contest instance
     THEN it should return the contest instance
     """
-    course = course_service.create(name=pytest.course_name, status='pending')
+    course = course_service.create(created_by=pytest.user_uuid, name=pytest.course_name, status='pending')
     assert cleaner.is_mapped(course) == course
 
 

@@ -74,7 +74,7 @@ def test_course_find_w_pagination():
     WHEN the find method is called with valid pagination
     THEN it should return the number of courses defined in the pagination arguments
     """
-    course_service.create(status='pending', name=pytest.course_name)
+    course_service.create(created_by=pytest.user_uuid, status='pending', name=pytest.course_name)
 
     courses_0 = course_service.find(page=1, per_page=1)
     assert courses_0.total == 2
@@ -157,7 +157,7 @@ def test_course_create(reset_db):
     WHEN the create method is called
     THEN it should return 1 course and add 1 course instance into the database
     """
-    course = course_service.create(status='pending', name=pytest.course_name)
+    course = course_service.create(created_by=pytest.user_uuid,status='pending', name=pytest.course_name)
 
     assert course.uuid is not None
     assert course.name == pytest.course_name
@@ -169,7 +169,7 @@ def test_course_create_dup():
     WHEN the create method is called with the exact same parameters of an existing course
     THEN it should return 1 course and add 1 course instance into the database
     """
-    course = course_service.create(status='pending', name=pytest.course_name)
+    course = course_service.create(created_by=pytest.user_uuid,status='pending', name=pytest.course_name)
     assert course.uuid is not None
 
 
@@ -180,7 +180,7 @@ def test_course_create_w_bad_field():
     THEN it should return 0 course and add 0 course instance into the database and ManualException with code 500
     """
     try:
-        _ = course_service.create(status='pending', name=pytest.course_name, junk='junk')
+        _ = course_service.create(created_by=pytest.user_uuid, status='pending', name=pytest.course_name, junk='junk')
     except ManualException as ex:
         assert ex.code == 500
 

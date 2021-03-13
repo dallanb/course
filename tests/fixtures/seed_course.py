@@ -6,6 +6,7 @@ from src import services
 @pytest.fixture
 def seed_course():
     pytest.course = services.CourseService().create(
+        created_by=pytest.user_uuid,
         name=pytest.course_name,
         line_1=pytest.line_1,
         line_2=pytest.line_2,
