@@ -71,9 +71,9 @@ def test_commit(reset_db):
     db.commit()
     assert db.count(model=Course) == 1
 
-    instance_0 = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
-    instance_1 = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
-    instance_2 = db.init(model=Course, name=pytest.course_name, created_by=pytest.user_uuid, status='pending')
+    instance_0 = db.init(model=Course, name='A', created_by=pytest.user_uuid, status='pending')
+    instance_1 = db.init(model=Course, name='B', created_by=pytest.user_uuid, status='pending')
+    instance_2 = db.init(model=Course, name='C', created_by=pytest.user_uuid, status='pending')
     db.add(instance=instance_0)
     db.add(instance=instance_1)
     db.add(instance=instance_2)

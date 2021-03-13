@@ -8,7 +8,7 @@ from ..common import StatusEnum
 
 class Course(db.Model, BaseMixin):
     created_by = db.Column(UUIDType(binary=False), nullable=False)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
     status = db.Column(db.Enum(StatusEnum), nullable=False)
     line_1 = db.Column(db.String, nullable=True)
     line_2 = db.Column(db.String, nullable=True)
