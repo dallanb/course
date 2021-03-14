@@ -27,6 +27,19 @@ class CoursesAPI(Base):
             }
         )
 
+    @marshal_with(DataResponse.marshallable())
+    def put(self, uuid):
+        data = self.clean(schema=update_schema, instance=request.get_json())
+        course = self.course.update(uuid=uuid, **data)
+        return DataResponse(
+            data={
+                'courses': self.dump(
+                    schema=dump_schema,
+                    instance=course
+                )
+            }
+        )
+
 
 class CoursesListAPI(Base):
     def __init__(self):

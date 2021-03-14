@@ -146,6 +146,38 @@ def test_fetch_all_course(reset_db, seed_course):
     assert courses['uuid'] is not None
 
 
+###########
+# Update
+###########
+def test_update_course(reset_db, seed_course):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the PUT endpoint 'course' is requested
+    THEN check that the response is valid
+    """
+    course_uuid = pytest.course.uuid
+
+    # Header
+    headers = {'X-Consumer-Custom-ID': pytest.user_uuid}
+
+    # Payload
+    payload = {
+        'status': 'active'
+    }
+
+    # Request
+    response = app.test_client().put(f'/courses/{course_uuid}',
+                                     headers=headers, json=payload)
+
+    # Response
+    assert response.status_code == 200
+    response = json.loads(response.data)
+    assert response['msg'] == 'OK'
+    courses = response['data']['courses']
+    assert courses['status'] == 'active'
+    assert courses['uuid'] is not None
+
+
 #############
 # FAIL
 #############
@@ -178,3 +210,28 @@ def test_create_course_fail(reset_db):
 
     # Response
     assert response.status_code == 400
+
+
+###########
+# Update
+###########
+def test_update_course_fail(reset_db, seed_course):
+    """
+    GIVEN a Flask application configured for testing
+    WHEN the PUT endpoint 'course' is requested
+    THEN check that the response is valid
+    """
+    course_uuid = pytest.course.uuid
+
+    # Header
+    headers = {'X-Consumer-Custom-ID': pytest.user_uuid}
+    # Payload
+    payload = {
+        'status': 'approved'
+    }
+
+    # Request
+    response = app.test_client().put(f'/courses/{course_uuid}', headers=headers, json=payload)
+
+    # Response
+    assert response.status_code == 500

@@ -46,11 +46,12 @@ class FetchAllCourseSchema(Schema):
 
 class UpdateCourseSchema(Schema):
     name = fields.String(required=False)
-    line_1 = fields.Str(required=False, missing=None)
-    line_2 = fields.Str(required=False, missing=None)
-    city = fields.Str(required=False, missing=None)
-    province = fields.Str(required=False, missing=None)
-    country = fields.Str(required=False, missing=None)
+    line_1 = fields.Str(required=False)
+    line_2 = fields.Str(required=False)
+    city = fields.Str(required=False)
+    province = fields.Str(required=False)
+    country = fields.Str(required=False)
+    status = fields.Str(required=False)
 
 
 create_schema = CreateCourseSchema()
