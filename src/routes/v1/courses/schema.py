@@ -1,8 +1,7 @@
 from marshmallow import Schema, post_dump
 from marshmallow_enum import EnumField
-from webargs import fields
-
 from src.common import StatusEnum
+from webargs import fields
 
 
 class CreateCourseSchema(Schema):
@@ -42,6 +41,7 @@ class FetchAllCourseSchema(Schema):
     page = fields.Int(required=False, missing=1)
     per_page = fields.Int(required=False, missing=10)
     search = fields.String(required=False)
+    status = fields.String(required=False)
 
 
 class UpdateCourseSchema(Schema):
