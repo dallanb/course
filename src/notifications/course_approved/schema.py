@@ -4,7 +4,7 @@ from webargs import fields
 
 class CourseApprovedSchema(Schema):
     uuid = fields.UUID(attribute='course.uuid')
-    created_by = fields.UUID(attribute='course.league_uuid')
+    created_by = fields.UUID(attribute='course.created_by')
     message = fields.String()
 
     @pre_dump
