@@ -6,3 +6,5 @@ DATABASE_URL=postgresql://app:password@db:5432/app
 SQL_HOST=db
 SQL_PORT=5432
 DATABASE=app
+KAFKA_URL=kafka:9092
+

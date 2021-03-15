@@ -1,10 +1,11 @@
-from flask import request
+from flask import request, g
 from flask_restful import marshal_with
 
 from .schema import *
 from ..base import Base
+from ....common import check_user
 from ....common.response import DataResponse
-from ....services import CourseService
+from ....services import CourseService, HoleService
 
 
 class CoursesAPI(Base):
@@ -26,11 +27,25 @@ class CoursesAPI(Base):
             }
         )
 
+    @marshal_with(DataResponse.marshallable())
+    def put(self, uuid):
+        data = self.clean(schema=update_schema, instance=request.get_json())
+        course = self.course.update(uuid=uuid, **data)
+        return DataResponse(
+            data={
+                'courses': self.dump(
+                    schema=dump_schema,
+                    instance=course
+                )
+            }
+        )
+
 
 class CoursesListAPI(Base):
     def __init__(self):
         Base.__init__(self)
         self.course = CourseService()
+        self.hole = HoleService()
 
     @marshal_with(DataResponse.marshallable())
     def get(self):
@@ -51,15 +66,16 @@ class CoursesListAPI(Base):
         )
 
     @marshal_with(DataResponse.marshallable())
+    @check_user
     def post(self):
         data = self.clean(schema=create_schema, instance=request.get_json())
-        course = self.course.create(status='pending', **data)
+        holes = data.pop('holes', None)
+        course = self.course.create(status='pending', **data, created_by=g.user)
 
-        # participants = data.pop('participants')
-        # if participants:
-        #     for user_uuid in participants:
-        #         status = 'active' if g.user == user_uuid else 'pending'
-        #         self.participant.create(user_uuid=user_uuid, status=status, contest=contest)
+        if holes is not None:
+            for hole in holes:
+                self.hole.add(course=course, **hole)
+            self.hole.commit()
         return DataResponse(
             data={
                 'courses': self.dump(

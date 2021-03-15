@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
+from flask_migrate import Migrate
 from flask_restful import Api, marshal_with
 from flask_seeder import FlaskSeeder
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,8 @@ CORS(app, supports_credentials=True)
 # db
 db = SQLAlchemy(app)
 make_searchable(db.metadata)
+# migrate
+migrate = Migrate(app, db, compare_type=True)
 # ma
 ma = Marshmallow()
 # routes
