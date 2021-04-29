@@ -1,1 +1,1 @@
-from .course_notification import course_notification
+from .log_trace import log_trace
